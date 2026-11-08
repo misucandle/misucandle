@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
@@ -28,13 +28,44 @@ function Logo({ onClick }: { onClick?: () => void }) {
   );
 }
 
+function LinkList({
+  pathname,
+  onClick,
+}: {
+  pathname: string | null;
+  onClick: () => void;
+}) {
+  const isActive = (href: string) =>
+    pathname !== null &&
+    (href === "/" ? pathname === "/" : pathname.startsWith(href));
+
+  return (
+    <nav className="mt-16 flex flex-col gap-8 text-sm font-semibold uppercase tracking-[0.3em]">
+      {navLinks.map((link) => (
+        <Link
+          key={link.name}
+          href={link.href}
+          onClick={onClick}
+          aria-current={isActive(link.href) ? "page" : undefined}
+          className={`transition-colors hover:text-amber-700 ${
+            isActive(link.href) ? "text-amber-700" : "text-neutral-900"
+          }`}
+        >
+          {link.name}
+        </Link>
+      ))}
+    </nav>
+  );
+}
+
+function ActiveLinkList({ onClick }: { onClick: () => void }) {
+  const pathname = usePathname();
+  return <LinkList pathname={pathname} onClick={onClick} />;
+}
+
 export function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname();
   const close = () => setIsOpen(false);
-
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
     <>
@@ -78,21 +109,9 @@ export function NavBar() {
 
           <Logo onClick={close} />
 
-          <nav className="mt-16 flex flex-col gap-8 text-sm font-semibold uppercase tracking-[0.3em]">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                onClick={close}
-                aria-current={isActive(link.href) ? "page" : undefined}
-                className={`transition-colors hover:text-amber-700 ${
-                  isActive(link.href) ? "text-amber-700" : "text-neutral-900"
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </nav>
+          <Suspense fallback={<LinkList pathname={null} onClick={close} />}>
+            <ActiveLinkList onClick={close} />
+          </Suspense>
         </div>
 
         <div className="flex gap-5 text-neutral-500">
