@@ -50,7 +50,7 @@ async function ProductDetail({ params }: { params: Params }) {
 
   return (
     <div className="mt-8 grid gap-10 lg:grid-cols-2">
-      <ProductGallery images={images} dimmed={out} />
+      <ProductGallery images={images} />
 
       <div className="self-center">
         {p.category && (

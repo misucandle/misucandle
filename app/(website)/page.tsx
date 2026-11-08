@@ -30,33 +30,35 @@ async function Products({ searchParams }: { searchParams: SearchParams }) {
   const { status = "", category = "" } = await searchParams;
   const products = await getProducts();
 
-  // Danh sách category lấy động từ dữ liệu
-  const catMap = new Map<string, { title: string; order: number }>();
+  const catMap = new Map<string, { title: string; rank: string }>();
   products.forEach((p) => {
     if (p.category) {
       catMap.set(p.category.slug, {
         title: p.category.title,
-        order: p.category.order ?? 999,
+        rank: p.category.orderRank ?? "~", // chưa có thứ tự thì xuống cuối
       });
     }
   });
-  const cats = [...catMap].sort(
-    (a, b) => a[1].order - b[1].order || a[1].title.localeCompare(b[1].title),
+  const cats = [...catMap].sort((a, b) =>
+    a[1].rank < b[1].rank
+      ? -1
+      : a[1].rank > b[1].rank
+        ? 1
+        : a[1].title.localeCompare(b[1].title),
   );
 
   const filtered = products.filter(
     (p) => matchStatus(p, status) && matchCategory(p, category),
   );
 
-  const byStatus = products.filter((p) => matchStatus(p, status));
   const byCategory = products.filter((p) => matchCategory(p, category));
 
   const categoryOptions = [
-    { label: "All", value: "", count: byStatus.length },
+    { label: "All", value: "", count: products.length },
     ...cats.map(([slug, { title }]) => ({
       label: title,
       value: slug,
-      count: byStatus.filter((p) => p.category?.slug === slug).length,
+      count: products.filter((p) => p.category?.slug === slug).length,
     })),
   ];
 

@@ -1,10 +1,16 @@
 import { defineType, defineField } from "sanity";
+import {
+  orderRankField,
+  orderRankOrdering,
+} from "@sanity/orderable-document-list";
 
 export const category = defineType({
   name: "category",
   title: "Category",
   type: "document",
+  orderings: [orderRankOrdering],
   fields: [
+    orderRankField({ type: "category" }),
     defineField({
       name: "title",
       title: "Tên category",
@@ -17,6 +23,5 @@ export const category = defineType({
       options: { source: "title", maxLength: 96 },
       validation: (r) => r.required(),
     }),
-    defineField({ name: "order", title: "Thứ tự hiển thị", type: "number" }),
   ],
 });

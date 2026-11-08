@@ -6,20 +6,14 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 type Img = { url: string; alt: string };
 
-export function ProductGallery({
-  images,
-  dimmed = false,
-}: {
-  images: Img[];
-  dimmed?: boolean;
-}) {
+export function ProductGallery({ images }: { images: Img[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
   const total = images.length;
 
   if (total === 0) {
     return (
-      <div className="flex aspect-[4/5] items-center justify-center bg-neutral-100 text-xs tracking-widest text-neutral-400">
+      <div className="flex aspect-4/5 items-center justify-center bg-neutral-100 text-xs tracking-widest text-neutral-400">
         NO IMAGE
       </div>
     );
@@ -59,12 +53,12 @@ export function ProductGallery({
         <div
           ref={trackRef}
           onScroll={onScroll}
-          className="flex snap-x snap-mandatory overflow-x-auto bg-neutral-100 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex snap-x snap-mandatory overflow-x-auto bg-neutral-100 scrollbar-none [&::-webkit-scrollbar]:hidden"
         >
           {images.map((img, i) => (
             <div
               key={img.url + i}
-              className="relative aspect-[4/5] w-full shrink-0 snap-center"
+              className="relative aspect-4/5 w-full shrink-0 snap-center"
             >
               <Image
                 src={img.url}
@@ -73,7 +67,7 @@ export function ProductGallery({
                 unoptimized
                 priority={i === 0}
                 sizes="(min-width:1024px) 45vw, 100vw"
-                className={`object-cover ${dimmed ? "opacity-50 grayscale" : ""}`}
+                className="object-cover"
               />
             </div>
           ))}

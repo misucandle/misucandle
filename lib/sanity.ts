@@ -32,7 +32,7 @@ export type Product = {
   quantity: number | null;
   notes?: string | null;
   description?: string | null;
-  category?: { title: string; slug: string; order?: number | null } | null;
+  category?: { title: string; slug: string; orderRank?: string | null } | null;
   gallery?: { url: string; alt?: string | null }[] | null;
   imageUrl?: string | null; // ảnh cũ (field image / imageUrl)
 };
@@ -40,12 +40,12 @@ export type Product = {
 const FIELDS = `
   _id, sku, name, "slug": slug.current, price, status,quantity,
   notes, description,
-  "category": category->{title, "slug": slug.current, order},
-  "gallery": gallery[defined(image.asset)]{ "url": image.asset->url, alt, isPrimary },
+  "category": category->{title, "slug": slug.current, orderRank},
+  "gallery": gallery[defined(asset)]{ "url": asset->url, alt },
   "imageUrl": coalesce(image.asset->url, imageUrl)
 `;
 
-export const ALL_PRODUCTS_QUERY = `*[_type == "product"] | order(_createdAt desc){${FIELDS}}`;
+export const ALL_PRODUCTS_QUERY = `*[_type == "product"] | order(orderRank, _createdAt desc){${FIELDS}}`;
 export const PRODUCT_BY_SLUG_QUERY = `*[_type == "product" && slug.current == $slug][0]{${FIELDS}}`;
 
 export type Availability = Status;

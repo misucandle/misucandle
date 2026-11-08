@@ -33,9 +33,7 @@ export function ProductCard({ product }: { product: Product }) {
               fill
               unoptimized
               sizes="(min-width:1024px) 30vw, (min-width:640px) 45vw, 100vw"
-              className={`object-cover transition duration-500 group-hover:scale-[1.03] ${
-                out ? "opacity-50 grayscale" : ""
-              }`}
+              className="object-cover transition duration-500 group-hover:scale-[1.03]"
             />
           ) : (
             <div className="flex h-full items-center justify-center text-xs tracking-widest text-neutral-400">

@@ -1,10 +1,16 @@
 import { defineType, defineField } from "sanity";
+import {
+  orderRankField,
+  orderRankOrdering,
+} from "@sanity/orderable-document-list";
 
 export const product = defineType({
   name: "product",
   title: "Sản phẩm",
   type: "document",
+  orderings: [orderRankOrdering],
   fields: [
+    orderRankField({ type: "product" }),
     defineField({
       name: "sku",
       title: "SKU",
@@ -20,7 +26,8 @@ export const product = defineType({
     defineField({
       name: "slug",
       type: "slug",
-      options: { source: "name", maxLength: 96 },
+      description: "Bấm Generate để tạo tự động từ SKU.",
+      options: { source: "sku", maxLength: 96 },
       validation: (r) => r.required(),
     }),
     defineField({
@@ -100,6 +107,15 @@ export const product = defineType({
     }),
   ],
   preview: {
-    select: { title: "name", subtitle: "sku", media: "gallery.0" },
+    select: { title: "name", sku: "sku", status: "status", media: "gallery.0" },
+    prepare({ title, sku, status, media }) {
+      const label =
+        status === "out_of_stock"
+          ? "Hết hàng"
+          : status === "pre_order"
+            ? "Pre-order"
+            : "Còn hàng";
+      return { title, subtitle: `${sku ?? ""} · ${label}`, media };
+    },
   },
 });
