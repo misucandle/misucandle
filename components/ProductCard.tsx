@@ -64,7 +64,7 @@ export function ProductCard({ product }: { product: Product }) {
           </div>
 
           <div className="shrink-0 text-right">
-            <p className="font-[family-name:var(--font-serif)] text-xl italic">
+            <p className="font-serif text-xl italic">
               {formatPrice(product.price)}
             </p>
             <p
