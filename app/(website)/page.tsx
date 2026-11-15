@@ -83,7 +83,7 @@ async function Products({ searchParams }: { searchParams: SearchParams }) {
   ];
 
   return (
-    <>
+    <div className="lg:grid lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-12">
       <FilterBar
         status={status}
         category={category}
@@ -91,17 +91,19 @@ async function Products({ searchParams }: { searchParams: SearchParams }) {
         statusOptions={statusOptions}
       />
 
-      {filtered.length === 0 ? (
-        <p className="py-20 text-center text-neutral-500">
-          Không có sản phẩm phù hợp.
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((p) => (
-            <ProductCard key={p._id} product={p} />
-          ))}
-        </div>
-      )}
-    </>
+      <div>
+        {filtered.length === 0 ? (
+          <p className="py-20 text-center text-neutral-500">
+            Không có sản phẩm phù hợp.
+          </p>
+        ) : (
+          <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-6 xl:grid-cols-4">
+            {filtered.map((p) => (
+              <ProductCard key={p._id} product={p} />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

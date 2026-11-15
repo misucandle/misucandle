@@ -11,11 +11,16 @@ function buildHref(params: { status?: string; category?: string }) {
 }
 
 const linkClass = (active: boolean) =>
-  `border-b pb-1 text-xs font-semibold uppercase tracking-[0.25em] transition-colors ${
+  `inline-block border-b pb-1 text-xs font-semibold uppercase tracking-[0.25em] transition-colors ${
     active
       ? "border-neutral-900 text-neutral-900"
       : "border-transparent text-neutral-400 hover:text-neutral-900"
   }`;
+const listClass =
+  "flex gap-6 overflow-x-auto whitespace-nowrap pb-1 lg:flex-col lg:gap-4 lg:overflow-visible";
+
+const headingClass =
+  "mb-3 text-[10px] uppercase tracking-[0.3em] text-neutral-400";
 
 export function FilterBar({
   status,
@@ -29,42 +34,46 @@ export function FilterBar({
   statusOptions: Option[];
 }) {
   return (
-    <div className="mb-10 space-y-5 border-b border-neutral-200 pb-6">
-      {/* Hàng 1: Category */}
-      <ul className="flex gap-6 overflow-x-auto whitespace-nowrap pb-1">
-        {categoryOptions.map((o) => (
-          <li key={o.value || "all"}>
-            <Link
-              href={buildHref({ category: o.value, status })}
-              scroll={false}
-              className={linkClass(category === o.value)}
-            >
-              {o.label} <span className="font-normal">({o.count})</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-
-      {/* Hàng 2: Tình trạng (bấm lại để bỏ lọc) */}
-      <ul className="flex items-center gap-6 overflow-x-auto whitespace-nowrap pb-1">
-        <li className="text-[10px] uppercase tracking-[0.25em] text-neutral-400">
-          Tình trạng:
-        </li>
-        {statusOptions.map((o) => {
-          const active = status === o.value;
-          return (
-            <li key={o.value}>
+    <nav
+      aria-label="Bộ lọc sản phẩm"
+      className="mb-8 space-y-6 border-b border-neutral-200 pb-6 lg:sticky lg:top-28 lg:mb-0 lg:self-start lg:border-b-0 lg:pb-0"
+    >
+      <div>
+        <h2 className={headingClass}>Danh mục</h2>
+        <ul className={listClass}>
+          {categoryOptions.map((o) => (
+            <li key={o.value || "all"}>
               <Link
-                href={buildHref({ category, status: active ? "" : o.value })}
+                href={buildHref({ category: o.value, status })}
                 scroll={false}
-                className={linkClass(active)}
+                className={linkClass(category === o.value)}
               >
                 {o.label} <span className="font-normal">({o.count})</span>
               </Link>
             </li>
-          );
-        })}
-      </ul>
-    </div>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h2 className={headingClass}>Tình trạng</h2>
+        <ul className={listClass}>
+          {statusOptions.map((o) => {
+            const active = status === o.value;
+            return (
+              <li key={o.value}>
+                <Link
+                  href={buildHref({ category, status: active ? "" : o.value })}
+                  scroll={false}
+                  className={linkClass(active)}
+                >
+                  {o.label} <span className="font-normal">({o.count})</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </nav>
   );
 }

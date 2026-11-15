@@ -11,7 +11,6 @@ import { formatPrice } from "@/lib/format";
 
 export function ProductCard({ product }: { product: Product }) {
   const availability = getAvailability(product);
-  const out = availability === "out_of_stock";
   const cover = getPrimaryImage(product);
   const href = product.slug ? `/product/${product.slug}` : "#";
 
@@ -32,7 +31,7 @@ export function ProductCard({ product }: { product: Product }) {
               alt={cover.alt}
               fill
               unoptimized
-              sizes="(min-width:1024px) 30vw, (min-width:640px) 45vw, 100vw"
+              sizes="(min-width:1280px) 22vw, (min-width:768px) 30vw, 50vw"
               className="object-cover transition duration-500 group-hover:scale-[1.03]"
             />
           ) : (
@@ -40,35 +39,17 @@ export function ProductCard({ product }: { product: Product }) {
               NO IMAGE
             </div>
           )}
-
-          {availability !== "in_stock" && (
-            <span className="absolute left-3 top-3 bg-white/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em]">
-              {availability === "pre_order" ? "Pre-order" : "Hết hàng"}
-            </span>
-          )}
         </div>
 
-        <div className="mt-5 flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <h3 className="truncate text-sm font-semibold uppercase tracking-[0.3em]">
-              {product.name}
-            </h3>
-            <p className="mt-1 text-base text-neutral-500">
-              {product.category?.title ?? "Chưa phân loại"}
-            </p>
-            {product.notes && (
-              <p className="mt-1 text-sm italic text-neutral-400">
-                {product.notes}
-              </p>
-            )}
-          </div>
+        <div className="mt-4">
+          <h3 className="truncate text-xs font-semibold uppercase tracking-[0.2em] sm:text-sm">
+            {product.name}
+          </h3>
 
-          <div className="shrink-0 text-right">
-            <p className="font-[family-name:var(--font-serif)] text-xl italic">
-              {formatPrice(product.price)}
-            </p>
+          <div className="mt-2 flex items-baseline justify-between gap-2">
+            <p className="font-sans text-sm">{formatPrice(product.price)}</p>
             <p
-              className={`mt-1 text-xs uppercase tracking-widest ${statusColor}`}
+              className={`text-[10px] uppercase tracking-widest ${statusColor}`}
             >
               {stockLabel(product)}
             </p>

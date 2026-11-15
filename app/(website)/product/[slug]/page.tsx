@@ -61,9 +61,7 @@ async function ProductDetail({ params }: { params: Params }) {
         <h1 className="mt-3 text-2xl font-semibold uppercase tracking-[0.3em]">
           {p.name}
         </h1>
-        <p className="mt-4 font-serif text-3xl italic">
-          {formatPrice(p.price)}
-        </p>
+        <p className="mt-4 font-sans text-3xl">{formatPrice(p.price)}</p>
 
         <dl className="mt-8 space-y-3 text-sm">
           <div className="flex gap-4">
