@@ -33,7 +33,13 @@ export type Product = {
   notes?: string | null;
   description?: string | null;
   category?: { title: string; slug: string; orderRank?: string | null } | null;
-  gallery?: { url: string; alt?: string | null }[] | null;
+  gallery?:
+    | {
+        url: string;
+        alt?: string | null;
+        hotspot?: { x: number; y: number } | null;
+      }[]
+    | null;
   imageUrl?: string | null; // ảnh cũ (field image / imageUrl)
 };
 
@@ -41,7 +47,7 @@ const FIELDS = `
   _id, sku, name, "slug": slug.current, price, status,quantity,
   notes, description,
   "category": category->{title, "slug": slug.current, orderRank},
-  "gallery": gallery[defined(asset)]{ "url": asset->url, alt },
+  "gallery": gallery[defined(asset)]{ "url": asset->url, alt, hotspot },
   "imageUrl": coalesce(image.asset->url, imageUrl)
 `;
 
@@ -67,7 +73,7 @@ export function stockLabel(p: Product): string {
     case "out_of_stock":
       return "Hết hàng";
     default:
-      return p.quantity != null ? `Còn ${p.quantity}` : "Còn hàng";
+      return p.quantity != null ? `Số lượng: ${p.quantity}` : "Còn hàng";
   }
 }
 
@@ -90,11 +96,17 @@ export async function getProduct(slug: string) {
   return client.fetch<Product | null>(PRODUCT_BY_SLUG_QUERY, { slug });
 }
 
-export type ProductImage = { url: string; alt: string };
+export type ProductImage = { url: string; alt: string; position?: string };
 export function getImages(p: Product): ProductImage[] {
-  const result = (p.gallery ?? [])
+  const result: ProductImage[] = (p.gallery ?? [])
     .filter((g) => g.url)
-    .map((g) => ({ url: g.url, alt: g.alt || p.name }));
+    .map((g) => ({
+      url: g.url,
+      alt: g.alt || p.name,
+      position: g.hotspot
+        ? `${(g.hotspot.x * 100).toFixed(1)}% ${(g.hotspot.y * 100).toFixed(1)}%`
+        : undefined,
+    }));
 
   if (result.length === 0 && p.imageUrl) {
     result.push({ url: p.imageUrl, alt: p.name });
@@ -103,3 +115,9 @@ export function getImages(p: Product): ProductImage[] {
 }
 
 export const getPrimaryImage = (p: Product) => getImages(p)[0] ?? null;
+
+// get the second image, or get the 1st one
+export const getPortfolioImage = (p: Product) => {
+  const imgs = getImages(p);
+  return imgs[1] ?? imgs[0] ?? null;
+};

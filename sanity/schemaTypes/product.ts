@@ -72,7 +72,7 @@ export const product = defineType({
       name: "gallery",
       title: "Ảnh sản phẩm",
       description:
-        "Kéo thả nhiều ảnh cùng lúc. Ảnh ĐẦU TIÊN là ảnh chính (hiện ở trang chủ); kéo ảnh lên đầu để đổi ảnh chính.",
+        "Kéo thả nhiều ảnh cùng lúc. Ảnh 1 là ảnh chính (hiện ở trang chủ). Ảnh 2 hiện ở trang Portfolio (nếu chỉ có 1 ảnh thì Portfolio dùng ảnh đó). Kéo ảnh để đổi thứ tự.",
       type: "array",
       options: { layout: "grid" },
       of: [
