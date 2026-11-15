@@ -46,8 +46,10 @@ export function ProductCard({ product }: { product: Product }) {
             {product.name}
           </h3>
 
-          <div className="mt-2 flex items-baseline justify-between gap-2">
-            <p className="font-sans text-sm">{formatPrice(product.price)}</p>
+          <div className="shrink-0 text-right">
+            <p className="font-serif text-xl italic">
+              {formatPrice(product.price)}
+            </p>
             <p
               className={`text-[10px] uppercase tracking-widest ${statusColor}`}
             >
